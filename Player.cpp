@@ -3,6 +3,8 @@
 #include"Ball.h"
 Player::Player(GameObject* parent)
 {
+	direction_ = 0.0f;
+	power_ = 0.3f;
 }
 
 Player::~Player()
