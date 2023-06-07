@@ -41,3 +41,26 @@ public:
 	}
 };
 
+inline XMFLOAT3 operator +=(XMFLOAT3 &p, const XMVECTOR &v)//inline 差し替え 参照ポインタで引数受け取り
+{
+	XMVECTOR pv = XMLoadFloat3(&p);//position を vector に
+	pv += v;//速度を足す +=にしておけ、-=だと、引いてるときにあたまバグるので．
+	XMStoreFloat3(&p, pv);
+	return p;
+}
+
+inline XMFLOAT3 operator +(const XMFLOAT3& v1, const XMVECTOR& v2)//inline 差し替え 参照ポインタで引数受け取り
+{
+
+	XMVECTOR pv = XMLoadFloat3(&v1);//position を vector に
+	pv += v2;//速度を足す +=にしておけ、-=だと、引いてるときにあたまバグるので．
+	XMFLOAT3 out;
+	XMStoreFloat3(&out, pv);//
+	return out;
+}
+
+inline float Length(XMVECTOR v)
+{
+	XMVECTOR lenVec = XMVector3Length(v);
+	return XMVectorGetX(lenVec);
+}

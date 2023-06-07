@@ -7,7 +7,7 @@ class Ball : public GameObject
 {
 	int hModel_;
 	int number_;
-	
+	XMVECTOR velocity_;
 
 	std::string fileName_;
 
@@ -34,4 +34,9 @@ public:
 	/// ボール番号を指定する関数 ハンドボールは0
 	/// </summary>
 	void SetNumber(int _no);
+
+	/// <summary>
+	/// ボールに力を加える
+	/// </summary>
+	void AddForce(XMVECTOR f);
 };

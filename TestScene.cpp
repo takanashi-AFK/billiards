@@ -2,6 +2,7 @@
 #include "Ball.h"
 #include"Engine/Model.h"
 #include"Engine/Camera.h"
+#include "Player.h"
 //コンストラク
 TestScene::TestScene(GameObject * parent)
 	: GameObject(parent, "TestScene")
@@ -19,7 +20,10 @@ void TestScene::Initialize()
 			b->SetNumber(i + 1);//ここでボール指定 1~9まで
 			b->SetPosition((i - 4) * 1.4, 0, (i - 4) * 1.4);
 		}
-
+		Player * p = Instantiate<Player>(this);
+		Ball* b = Instantiate<Ball>(this);
+		b->SetNumber(0);
+		p->SetMyBall(b);
 
 }
 
