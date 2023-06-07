@@ -29,6 +29,8 @@ public:
 	//開放
 	void Release() override;
 
+	XMFLOAT3 GetNextPosition() { return GetPosition() + velocity_; }
+
 
 	/// <summary>
 	/// ボール番号を指定する関数 ハンドボールは0

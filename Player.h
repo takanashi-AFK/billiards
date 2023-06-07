@@ -9,6 +9,7 @@ private:
 	Ball* myBall_;
 	float direction_;//向き(Y回転の角度 ラジアン)
 	float power_;//power
+	int hModel_;
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）

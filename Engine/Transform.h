@@ -51,7 +51,6 @@ inline XMFLOAT3 operator +=(XMFLOAT3 &p, const XMVECTOR &v)//inline ·‚µ‘Ö‚¦ Q
 
 inline XMFLOAT3 operator +(const XMFLOAT3& v1, const XMVECTOR& v2)//inline ·‚µ‘Ö‚¦ QÆƒ|ƒCƒ“ƒ^‚Åˆø”ó‚¯æ‚è
 {
-
 	XMVECTOR pv = XMLoadFloat3(&v1);//position ‚ğ vector ‚É
 	pv += v2;//‘¬“x‚ğ‘«‚· +=‚É‚µ‚Ä‚¨‚¯A-=‚¾‚ÆAˆø‚¢‚Ä‚é‚Æ‚«‚É‚ ‚½‚ÜƒoƒO‚é‚Ì‚ÅD
 	XMFLOAT3 out;
