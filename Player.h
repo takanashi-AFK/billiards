@@ -11,7 +11,6 @@ private:
 	float power_;//power
 	int hModel_;
 	float powpow_ = 0.01;
-	bool inflatable_;
 	XMFLOAT3 MousePos_;
 public:
 	//コンストラクタ
