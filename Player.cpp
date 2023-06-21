@@ -17,7 +17,6 @@ Player::Player(GameObject* parent)
 	assert(hModel_ >= 0);
 	transform_.scale_ = { 0.2,0.2,0.2 };
 	transform_.position_ = XMFLOAT3(10,10,1 );
-	inflatable_ = true;
 }
 
 Player::~Player()
