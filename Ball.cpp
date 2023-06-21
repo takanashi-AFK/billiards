@@ -30,12 +30,40 @@ void Ball::Update()
 	if (len < 0.0f) len = 0.0f;
 	velocity_ = XMVector3Normalize(velocity_) * len;//vectorの方向だけほしいから単位化
 
-	std::list<Ball*>all = FindGameObjects<Ball>();
+	std::list<Ball*>all =GetParent()->FindGameObjects<Ball>();
 	for (std::list <Ball*>::iterator itr = all.begin(); itr != all.end(); itr++) {
 		if (*itr == this) continue;
 		XMFLOAT3 next = transform_.position_ + velocity_;//自分の移動先
 		XMFLOAT3 other = (*itr)->GetNextPosition();		 //相手の移動先
-		if (/*nextとotherが当たったら*/true);
+		if (Length(next - other)<1.0f*2.0f) {//長さが玉の半径２個分以下になったら衝突判定を行う
+			//当たったから、ベクトルを進行方向とその反対のベクトルに分けなきゃいけない
+			//ボールとボールの間を壁と認識する
+			XMVECTOR n = other - next;//壁に向いているベクトル
+			n = XMVector3Normalize(n);//それを正規化
+			XMVECTOR powDot = XMVector3Dot(velocity_, n);//壁向きベクトルと進行ベクトルの内積を取得
+			float pow = XMVectorGetX(powDot);//nは押す力の向き、powは押す力の大きさ
+
+			XMVECTOR push = n * pow;//押すベクトル->相手に渡した力
+
+			velocity_ -= push;
+			(*itr)->AddForce(push);
+
+			///////////////other側///////////////
+			//こっち側も処理書けば埋まったりいもむしになったりしない！全然いもむしなったわ
+			//testSceneのupdateで引きはがす処理書いてる
+
+			 n = next - other;//壁に向いているベクトル
+			n = XMVector3Normalize(n);//それを正規化
+			 powDot = XMVector3Dot((*itr)->GetVelocity(), n);//壁向きベクトルと進行ベクトルの内積を取得
+			 pow = XMVectorGetX(powDot);//nは押す力の向き、powは押す力の大きさ
+
+			 push = n * pow;//押すベクトル->相手に渡した力
+
+			(*itr)->AddForce(-push);//相手から引く
+			AddForce(push);//自分に加える
+		}
+
+
 
 	}
 

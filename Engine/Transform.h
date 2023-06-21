@@ -63,3 +63,14 @@ inline float Length(XMVECTOR v)
 	XMVECTOR lenVec = XMVector3Length(v);
 	return XMVectorGetX(lenVec);
 }
+
+inline XMVECTOR operator - (const XMFLOAT3& p1, const XMFLOAT3& p2)
+{
+	XMVECTOR p1Vec, p2Vec;
+
+	p1Vec = XMLoadFloat3(&p1);
+	p2Vec = XMLoadFloat3(&p2);
+
+	return p1Vec - p2Vec;
+
+}

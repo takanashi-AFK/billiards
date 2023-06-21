@@ -41,4 +41,7 @@ public:
 	/// ƒ{[ƒ‹‚É—Í‚ğ‰Á‚¦‚é
 	/// </summary>
 	void AddForce(XMVECTOR f);
+
+
+	XMVECTOR GetVelocity() { return velocity_; }
 };
