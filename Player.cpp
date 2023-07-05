@@ -49,8 +49,6 @@ void Player::Update()
 			}
 		}
 
-
-		//powerに付随したゲージほしいね
 		if (Input::IsMouseButtonUp(0)){
 			XMVECTOR base = XMVectorSet(0, 0, power_, 0);//回転していないときに移動するベクトル
 			XMMATRIX yrot = XMMatrixRotationY(direction_);//回転行列を作って
