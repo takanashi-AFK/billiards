@@ -3,6 +3,10 @@
 #include"Ball.h"
 #include "Engine/Model.h"
 
+namespace {
+	const float GAUGE_TIME = 0.5;//ゲージが0から満タンになるまでの時間
+}
+
 /*
 マウスで方向を指定
 Lクリック長押しで伸び縮みするゲージ的なものでpower_の値をいじる
@@ -18,6 +22,7 @@ Player::Player(GameObject* parent)
 	assert(hModel_ >= 0);
 	transform_.scale_ = { 0.2,0.2,0.2 };
 	transform_.position_ = XMFLOAT3(10,10,1 );
+
 }
 
 Player::~Player()
@@ -29,23 +34,43 @@ void Player::Update()
 		MousePos_.x = Input::GetMousePosition().x/85;
 		direction_ = MousePos_.x;
 		
+		//if (Input::IsMouseButton(0)) {
+		//
+		//	if (power_ >= 1.5f)
+		//	{
+		//		powpow_ += -0.01f;
+		//	}
+
+		//	if (power_ <= 0.1f)
+		//	{
+		//		powpow_ += 0.01;
+		//	}
+		//	power_ += powpow_;
+		//	transform_.scale_ = { power_/2,power_/2,power_/2 };
+		//	if (Input::IsMouseButton(1))
+		//	{
+		//		power_ = 0;
+		//	}
+		//}
+
 		if (Input::IsMouseButton(0)) {
-		
-			if (power_ >= 1.5f)
-			{
-				powpow_ = -0.01f;
-			}
 
-			if (power_ <= 0.1f)
+			Gauge* pGauge = (Gauge*)FindObject("Gauge");
+			if (flag)
 			{
-				powpow_ = 0.01;
+				pGauge->AddValue(Gauge::Max/GAUGE_TIME/60.0f);
+				if (pGauge->GetValue() >= Gauge::Min)
+				{
+					flag = false;
+				}
 			}
-			power_ += powpow_;
-			transform_.scale_ = { power_,power_,power_ };
-
-			if (Input::IsMouseButton(1))
+			if (!flag)
 			{
-				power_ = 0;
+				pGauge->AddValue(-Gauge::Max/GAUGE_TIME/60.0f);
+				if (pGauge->GetValue() >= Gauge::Max)
+				{
+					flag = true;
+				}
 			}
 		}
 

@@ -3,6 +3,7 @@
 #include"Engine/Model.h"
 #include"Engine/Camera.h"
 #include "Player.h"
+#include"Gauge.h"
 //コンストラク
 TestScene::TestScene(GameObject * parent)
 	: GameObject(parent, "TestScene")
@@ -15,15 +16,18 @@ void TestScene::Initialize()
 	Camera::SetPosition(XMFLOAT3(0, 50, 0));
 	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
-		for (int i = 0; i < 9; i++) {
-			Ball* b = Instantiate <Ball>(this);
-			b->SetNumber(i + 1);//ここでボール指定 1~9まで
-			b->SetPosition((i - 4) * 1.4, 0, (i - 4) * 1.4);
-		}
-		Player * p = Instantiate<Player>(this);
-		Ball* b = Instantiate<Ball>(this);
-		b->SetNumber(0);
-		p->SetMyBall(b); 
+	for (int i = 0; i < 9; i++) {
+		Ball* b = Instantiate <Ball>(this);
+		b->SetNumber(i + 1);//ここでボール指定 1~9まで
+		b->SetPosition((i - 4) * 1.4, 0, (i - 4) * 1.4);
+	}
+	Player * p = Instantiate<Player>(this);
+	Ball* b = Instantiate<Ball>(this);
+	b->SetNumber(0);
+	p->SetMyBall(b); 
+
+	Gauge *g = Instantiate<Gauge>(this);
+	g->SetPosition(-0.8, -0.5);
 
 }
 

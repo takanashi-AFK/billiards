@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include<string>
+#include "Gauge.h"
 
 class Ball;
 class Player : public GameObject
@@ -12,6 +13,7 @@ private:
 	int hModel_;
 	float powpow_ = 0.01;
 	XMFLOAT3 MousePos_;
+	bool flag= true;
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）
