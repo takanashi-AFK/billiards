@@ -1,10 +1,11 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-//テストシーンを管理するクラス
+class Button;
+
+//タイトルシーンを管理するクラス
 class TitleScene : public GameObject
 {
-
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）
@@ -21,4 +22,13 @@ public:
 
 	//開放
 	void Release() override;
+private:
+	Button* start;
+	Button* back;
+	enum SELECT {
+		NONE = -1,
+		START = 0,
+		BACK,
+	};
+	SELECT selected;
 };

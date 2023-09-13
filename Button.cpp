@@ -1,82 +1,105 @@
 #include "Button.h"
 #include "Engine/Image.h"
-#include "Engine/Input.h"
-#include"Engine/Direct3D.h"
+#include "Engine/Direct3D.h"
+
+namespace {
+	float startX; // 移動開始X座標
+	float endX;   // 移動終了X座標
+	float totalTime; // 移動時間（秒）
+	float currentTime; // 現在の時間
+
+	int seq_line; // 今実行している行
+	float seq_time; // シーケンスを実行している時間
+	enum ACT { // やることをコマンド化
+		A_SLIDEIN = 1,
+		A_WAIT,
+		A_SLIDEOUT,
+		A_END
+	};
+	struct Sequence {
+		float time; // 時間
+		ACT action; // やること
+		float param; // 必要な値
+	};
+	Sequence tbl[] = {
+
+		{ 0.0f, A_SLIDEIN, 5.0f }, // まずはスライドイン
+		{ 3.0f, A_WAIT, 0.0f/*意味なし*/}, // 1秒待ってから
+		{ 4.0f, A_SLIDEOUT, -5.0f }, // スライドアウト
+		{ 5.0f, A_END, 0.0f} // ここで消える
+	};
+	ACT currentAction; // 今実行しているアクション
+	bool canMove; // 移動できる
+};
+
 Button::Button(GameObject* parent)
+{
+	seq_line = -1;
+	seq_time = 0.0f;
+	canMove = false;
+}
+
+Button::~Button()
 {
 }
 
 void Button::Initialize()
 {
-	hFoodButtonUpPict_ = Image::Load("Button/GiveUp.png");
-	hFoodButtonDownPict_ = Image::Load("Button/GiveDown.png");
-
-	hBackButtonUpPict_ = Image::Load("Button/BackUp.png");
-	hBackButtonDownPict_ = Image::Load("Button/BackDown.png");
-	Food.position_.x = -0.5;
-
-
-
-	Back.position_.x = 0.5;
-
-
-	pText = new Text;
-	pText->Initialize();
-	pText1 = new Text;
-	pText1->Initialize();
+	pushed = false;
+	hImage = -1;
+	transform_.position_.x = 0.0f;
+	transform_.position_.y = 0.0f;
 }
 
 void Button::Update()
 {
-	if (Input::IsMouseButton(0))
-		Image::SetAlpha(hFoodButtonUpPict_, 0);
-	else
-		Image::SetAlpha(hFoodButtonUpPict_, 255);
-
-	if (Input::IsMouseButton(0))
-		Image::SetAlpha(hBackButtonUpPict_, 0);
-	else
-		Image::SetAlpha(hBackButtonUpPict_, 255);
-
-	MousePos = Input::GetMousePosition();
 }
 
 void Button::Draw()
 {
 
-	Image::SetTransform(hFoodButtonDownPict_, Food);
-	Image::Draw(hFoodButtonDownPict_);
-
-	Image::SetTransform(hFoodButtonUpPict_, Food);
-	Image::Draw(hFoodButtonUpPict_);
-
-	Image::SetTransform(hBackButtonDownPict_, Back);
-	Image::Draw(hBackButtonDownPict_);
-
-	Image::SetTransform(hBackButtonUpPict_, Back);
-	Image::Draw(hBackButtonUpPict_);
-
-	int x, y;
-	x = Image::GetSize(hBackButtonUpPict_).x;
-	y = Image::GetSize(hBackButtonUpPict_).y;
-
-	SetPosition(x, y);
-
-	pText->Draw(1000, 500, x);
-	pText1->Draw(1200, 500, y);
+	if (pushed) {
+		Image::SetTransform(hPush, transform_);
+		Image::Draw(hPush);
+	}
+	else {
+		Image::SetTransform(hImage, transform_);
+		Image::Draw(hImage);
+	}
 }
 
-void Button::Release()
+bool Button::Finished()
 {
+	return canMove;
+}
+
+void Button::SetImage(std::string normal, std::string pushed)
+{
+	hImage = Image::Load((normal+".png").c_str());
+	hPush = Image::Load((pushed+".png").c_str());
+	size = Image::GetSize(hImage);
 }
 
 void Button::SetPosition(int x, int y)
 {
 	transform_.position_.x = (float)(x - Direct3D::screenWidth_ / 2) / Direct3D::screenWidth_;
-	transform_.position_.y = -(float)(y - Direct3D::screenHeight_ / 2)/(Direct3D::screenHeight_ / 2);
+	transform_.position_.y = -(float)(y - Direct3D::screenHeight_ / 2) / (Direct3D::screenHeight_/2);
 	center = XMFLOAT3(x, y, 0);
 }
 
-//まうすぽす取る
-//ボタンを２個インスタンス作る
-//
+void Button::Push(bool pushed)
+{
+	this->pushed = pushed;
+}
+
+bool Button::MouseInArea(XMFLOAT3 mousePos)
+{
+	if (abs(mousePos.x - center.x) > size.x/2)
+		return false;
+	if (abs(mousePos.y - center.y) > size.y/2)
+		return false;
+	return true;
+}
+
+//　イージング 0.0～1.0を補間する曲線
+//　スプライン 4つ以上の点を滑らかに通る曲線
