@@ -2,6 +2,7 @@
 #include"Engine/Input.h"
 #include"Ball.h"
 #include "Engine/Model.h"
+#include"Ready.h"
 
 namespace {
 	const float GAUGE_TIME = 0.5;//ƒQ[ƒW‚ª0‚©‚ç–žƒ^ƒ“‚É‚È‚é‚Ü‚Å‚ÌŽžŠÔ
@@ -31,6 +32,10 @@ Player::~Player()
 
 void Player::Update()
 {
+	Ready* pReady = (Ready*)FindObject("Ready");
+	if (pReady != nullptr&&!pReady->Finished())
+		return;
+
 		MousePos_.x = Input::GetMousePosition().x/85;
 		direction_ = MousePos_.x;
 		
@@ -55,23 +60,39 @@ void Player::Update()
 
 		if (Input::IsMouseButton(0)) {
 
-			Gauge* pGauge = (Gauge*)FindObject("Gauge");
-			if (flag)
-			{
-				pGauge->AddValue(Gauge::Max/GAUGE_TIME/60.0f);
-				if (pGauge->GetValue() >= Gauge::Min)
-				{
-					flag = false;
-				}
-			}
-			if (!flag)
-			{
-				pGauge->AddValue(-Gauge::Max/GAUGE_TIME/60.0f);
-				if (pGauge->GetValue() >= Gauge::Max)
-				{
-					flag = true;
-				}
-			}
+			if (power_ >= 1.5f)
+					{
+						powpow_ += -0.01f;
+					}
+
+					if (power_ <= 0.1f)
+					{
+						powpow_ += 0.01;
+					}
+					power_ += powpow_;
+					transform_.scale_ = { power_/2,power_/2,power_/2 };
+					if (Input::IsMouseButton(1))
+					{
+						power_ = 0;
+					}
+
+			//Gauge* pGauge = (Gauge*)FindObject("Gauge");
+			//if (flag)
+			//{
+			//	pGauge->AddValue(Gauge::Max/GAUGE_TIME/60.0f);
+			//	if (pGauge->GetValue() >= Gauge::Min)
+			//	{
+			//		flag = false;
+			//	}
+			//}
+			//if (!flag)
+			//{
+			//	pGauge->AddValue(-Gauge::Max/GAUGE_TIME/60.0f);
+			//	if (pGauge->GetValue() >= Gauge::Max)
+			//	{
+			//		flag = true;
+			//	}
+			//}
 		}
 
 		if (Input::IsMouseButtonUp(0)){

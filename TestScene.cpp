@@ -4,6 +4,7 @@
 #include"Engine/Camera.h"
 #include "Player.h"
 #include"Gauge.h"
+#include"Ready.h"
 //コンストラク
 TestScene::TestScene(GameObject * parent)
 	: GameObject(parent, "TestScene")
@@ -28,7 +29,7 @@ void TestScene::Initialize()
 
 	Gauge *g = Instantiate<Gauge>(this);
 	g->SetPosition(-0.8, -0.5);
-
+	Instantiate<Ready>(this);
 }
 
 //更新
