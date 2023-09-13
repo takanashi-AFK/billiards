@@ -15,23 +15,43 @@ void TitleScene::Initialize()
 {
 	Camera::SetPosition(XMFLOAT3(0, 50, 0));
 	Camera::SetTarget(XMFLOAT3(0, 0, 0));
+
+
 	start = Instantiate<Button>(this);
 	start->SetImage("Button/GiveUp", "Button/GiveDown");
-	start->SetPosition(640, 360 - 100);
+	start->SetPosition(1920, 360 - 100);
+	start->SetMovePosition(640, 360 - 100, 1.0f);
 	start->SetScale(0.5, 0.5, 0.5);
 	back = Instantiate<Button>(this);
 	back->SetImage("Button/BackUp", "Button/BackDown");
 	back->SetScale(0.5, 0.5, 0.5);
-	back->SetPosition(640, 360 + 100);
+	back->SetPosition(1920, 360 + 100);
+	back->SetMovePosition(640, 360 + 100, 1.0f);
 }
 
 //çXêV
 void TitleScene::Update()
 {
 	if (Input::IsMouseButtonDown(0)) {
-		if (selected == START) {
-			SceneManager* scene = dynamic_cast<SceneManager*>(FindObject("SceneManager"));
-			scene->ChangeScene(SCENE_ID_TEST);
+		//Ç§Ç≤Ç¢ÇƒÇÈÇ»ÇÁstop
+		bool moving = false;
+		if (start->IsMoving())
+		{
+			start->ForceMoveEnd();
+			moving = true;
+		}
+		if (back->IsMoving())
+		{
+			back->ForceMoveEnd();
+			moving = true;
+		}
+		if (!moving)
+		{
+			if (selected == START) {
+				SceneManager* scene = dynamic_cast<SceneManager*>(FindObject("SceneManager"));
+				scene->ChangeScene(SCENE_ID_TEST);
+			}
+
 		}
 	}
 	XMFLOAT3 pos = Input::GetMousePosition();

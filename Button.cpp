@@ -49,10 +49,25 @@ void Button::Initialize()
 	hImage = -1;
 	transform_.position_.x = 0.0f;
 	transform_.position_.y = 0.0f;
+
+	currentTime = 0;
+	totalTime = 0; 
 }
 
 void Button::Update()
 {
+	currentTime += 1.0f / 60.0f;
+	if (currentTime >= totalTime) {
+		center = endPos;
+	}
+	else {
+		float x = (endPos.x - startPos.x) * (currentTime / totalTime) + startPos.x;
+		float y = (endPos.y - startPos.y) * (currentTime / totalTime) + startPos.y;
+		SetPosition(x, y);
+	}
+
+	
+
 }
 
 void Button::Draw()
@@ -99,6 +114,33 @@ bool Button::MouseInArea(XMFLOAT3 mousePos)
 	if (abs(mousePos.y - center.y) > size.y/2)
 		return false;
 	return true;
+}
+
+void Button::SetMovePosition(int toX, int toY, float seconds)
+{
+	startPos = center;
+	endPos = XMFLOAT3((float)toX, (float)toY, 0);
+	totalTime = seconds;
+	currentTime = 0.0f;
+}
+
+float Button::easeIncubic(float x)
+{
+	return x * x * x;
+}
+
+bool Button::IsMoving()
+{
+	return(currentTime = totalTime);
+}
+
+void Button::ForceMoveEnd()
+{
+	if (IsMoving())
+	{
+		SetPosition(endPos.x, endPos.y);
+	currentTime = totalTime;
+	}
 }
 
 //　イージング 0.0～1.0を補間する曲線
