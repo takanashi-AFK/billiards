@@ -27,6 +27,8 @@ void TestScene::Initialize()
 	b->SetNumber(0);
 	p->SetMyBall(b); 
 
+	
+
 	Gauge *g = Instantiate<Gauge>(this);
 	g->SetPosition(-0.8, -0.5);
 	Instantiate<Ready>(this);
