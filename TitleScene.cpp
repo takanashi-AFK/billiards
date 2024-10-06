@@ -45,7 +45,7 @@ void TitleScene::Update()
 			back->ForceMoveEnd();
 			moving = true;
 		}
-		if (!moving)
+		if (moving)
 		{
 			if (selected == START) {
 				SceneManager* scene = dynamic_cast<SceneManager*>(FindObject("SceneManager"));
